@@ -1,6 +1,6 @@
-
 #!/usr/bin/python3
 import requests
+import utils.colors
 
 class Header:
     
@@ -15,6 +15,7 @@ class Header:
         'Via',
         'X-Backend-Server'
     ]
+    
     def __init__(self, url):
         self.url = url
         self.headers = requests.get(self.url).headers
@@ -32,14 +33,14 @@ class Header:
     
     def information_leakage_analysis(self):
         fields = [element for element in list(self.headers.keys()) if element in self.info_leakage]
-        print("################## Information Leakage analysis ####################")
+        print(utils.colors.colorize(" [ Information Leakage analysis ]","info"))
         print("Number of fields that leak information : ", len(fields))
         for field in fields :
             print(" +  ",field, " : ", self.headers[field])
         return fields
     
     def cookie_analysis(self):
-        print("################## Cookie analysis ####################")
+        print(utils.colors.colorize(" [ Cookie analysis ]","info"))
         set_cookie = self.get_header("Set-Cookie")
         if set_cookie is None:
             print("This website seems not uses cookies")
@@ -58,12 +59,3 @@ class Header:
 
 
 
-header = Header(url="http://facebook.com/")
-print(header)   
-print("\n ---------------------- \n")
-print(header.list_of_headers(), len(header.list_of_headers()))
-print("\n ---------------------- \n")
-header.information_leakage_analysis()
-print("\n ---------------------- \n")
-print(header.cookie_analysis())
-    
